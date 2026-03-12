@@ -1,15 +1,19 @@
 package com.org.project.application.controller;
 
 import com.org.project.application.entity.Admin;
+import com.org.project.application.repo.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
 public class HomeController {
+    @Autowired
+    CustomerRepository customerRepository;
 
     @GetMapping("/api/coutomers")
     public  String  get(){
-        return "";
+        return customerRepository.findAll().toString();
 
     }
     @GetMapping("/{admin}")
@@ -26,4 +30,5 @@ public class HomeController {
     public boolean SaveSomting(String somting){
         return true;
     }
+
 }
