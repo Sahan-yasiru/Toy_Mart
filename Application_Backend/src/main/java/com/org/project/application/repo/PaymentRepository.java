@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, String> {
 
-    @Query("select p.paymentID from payment p order by p.paymentID desc ")
+    @Query("select p.paymentId from Payment p order by p.paymentId desc ")
     List<String> getLastID();
 }

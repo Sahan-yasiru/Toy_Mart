@@ -8,17 +8,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name ="category" )
+@Entity
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    private int id;
 
-    @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+}
 
 //    @Transactional
 //    public List<DtoCategory> getAll() {
@@ -28,4 +30,4 @@ public class Category {
 //                .collect(Collectors.toList());
 //    }
 
-}
+

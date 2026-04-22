@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class DtoCustomer {
-    private String customer_ID;
+    private String customerId;
     private String name;
     private  String eMail;
     private String passWord;

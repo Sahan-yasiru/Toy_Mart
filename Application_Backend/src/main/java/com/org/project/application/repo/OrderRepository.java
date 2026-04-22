@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order,String> {
 
-    @Query("SELECT o.orderID FROM customer_order o ORDER BY o.orderID DESC")
+    @Query("SELECT o.orderId FROM orders o ORDER BY o.orderId DESC")
     List<String> getLastID();
 
 }

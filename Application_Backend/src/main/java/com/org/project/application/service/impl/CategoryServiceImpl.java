@@ -3,6 +3,7 @@ package com.org.project.application.service.impl;
 import com.org.project.application.dto.DtoCategory;
 import com.org.project.application.dto.DtoProduct;
 import com.org.project.application.entity.Category;
+import com.org.project.application.exception.CustomException;
 import com.org.project.application.repo.CategoryRepository;
 import com.org.project.application.service.custom.CategoryService;
 import jakarta.transaction.Transactional;
@@ -21,21 +22,25 @@ public class CategoryServiceImpl implements CategoryService {
     private  final ModelMapper modelMapper;
 
     @Override
-    public void save(DtoCategory dto) {
+    public DtoCategory save(DtoCategory dto) {
+        if(categoryRepository.existsByName(dto.getName())){
+            throw new CustomException("Category is already registered");
+        }
         categoryRepository.save(modelMapper.map(dto, Category.class));
+        return dto;
     }
 
 
     //remember to verify before update
     @Override
-    public void update(DtoCategory dto) {
+    public DtoCategory update(DtoCategory dto) {
         categoryRepository.save(modelMapper.map(dto,Category.class));
-
+        return dto;
     }
 
     @Override
     @Transactional
-    public List<DtoCategory> getAll() {
+    public List<DtoCategory> getAll() throws Exception {
         List<DtoCategory> categories=new ArrayList<>();
         return categoryRepository.findAll().stream().map(category -> {
 

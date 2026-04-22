@@ -2,6 +2,7 @@ package com.org.project.application.service.impl;
 
 import com.org.project.application.dto.DtoProduct;
 import com.org.project.application.entity.Product;
+import com.org.project.application.exception.CustomException;
 import com.org.project.application.repo.ProductRepository;
 import com.org.project.application.service.custom.ProductService;
 import jakarta.transaction.Transactional;
@@ -25,18 +26,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void save(DtoProduct dto) {
+    public DtoProduct save(DtoProduct dto) {
+        if(productRepository.existsByName(dto.getName())){
+            throw new CustomException("product is already registered");
+        }
         productRepository.save(modelMapper.map(dto, Product.class));
+        return dto;
 
     }
 
     @Override
-    public void update(DtoProduct dto) {
+    public DtoProduct update(DtoProduct dto) {
         productRepository.save(modelMapper.map(dto, Product.class));
+        return dto;
     }
 
     @Override
-    public List<DtoProduct> getAll() {
+    public List<DtoProduct> getAll() throws Exception {
         return productRepository.findAll().stream().map(product -> modelMapper.map(product,DtoProduct.class)).toList();
     }
 

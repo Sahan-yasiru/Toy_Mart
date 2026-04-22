@@ -8,18 +8,17 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "customer")
+@Entity
 public class Customer {
-    @Id
-    private String customer_ID;
 
-    @Column(nullable = false)
+    @Id
+    private String customerId;
+
     private String name;
 
-    @Column(name = "E-Mail",nullable = false,unique = true)
-    private  String eMail;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    @Column(name = "password",nullable = false)
-    private String passWord;
-
+    @Column(nullable = false)
+    private String password;
 }

@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    @Query("select p.id from product p order by p.id desc ")
+    @Query("select p.id from Product p order by p.id desc ")
     List<String> getLastID();
+
+    boolean existsByName(String name);
+
 }

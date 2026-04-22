@@ -12,6 +12,7 @@ public class DtoProduct {
     private String id;
     private String name;
     private int qty;
+    private double price;
 
     @ToString.Exclude
     private DtoCategory category;

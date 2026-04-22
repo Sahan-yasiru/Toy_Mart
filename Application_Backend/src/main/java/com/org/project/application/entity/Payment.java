@@ -11,16 +11,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "payment")
+@Entity
 public class Payment {
 
     @Id
-    @Column(name = "pay_ID")
-    private String paymentID;
+    private String paymentId;
 
     private Date date;
 
     @OneToOne
-    @JoinColumn(name = "order_ID")
+    @JoinColumn(name = "order_id")
     private Order order;
 }

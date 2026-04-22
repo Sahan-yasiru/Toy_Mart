@@ -1,22 +1,20 @@
 package com.org.project.application.service;
 
-import com.org.project.application.dto.DtoAdmin;
-
 import java.util.List;
 
 public interface SuperService<T> {
-    void  save(T dto);
+    T  save(T dto) throws Exception;
 
-    void update(T dto);
+    T update(T dto)throws Exception;
 
-    List<T> getAll();
+    List<T> getAll()throws Exception;
 
-    String getLastID();
+    String getLastID()throws Exception;
 
-    void  delete(String id);
+    void  delete(String id)throws Exception;
 
-    T find(String id);
+    T find(String id)throws Exception;
 
-    boolean ifExit(String id);
+    boolean ifExit(String id)throws Exception;
 
 }

@@ -2,9 +2,9 @@ package com.org.project.application.service.impl;
 
 import com.org.project.application.dto.DtoAdmin;
 import com.org.project.application.entity.Admin;
+import com.org.project.application.exception.CustomException;
 import com.org.project.application.repo.AdminRepository;
 import com.org.project.application.service.custom.AdminService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,27 +21,31 @@ public class AdminServiceImpl implements AdminService{
     private final ModelMapper modelMapper;
 
     @Override
-    public void save(DtoAdmin dtoAdmin) {
+    public DtoAdmin save(DtoAdmin dtoAdmin) throws Exception{
         if (dtoAdmin.getAdminID() == null) {
             dtoAdmin.setAdminID(getLastID());
         }
-        adminRepository.save(modelMapper.map(dtoAdmin, Admin.class));
-    }
-
-    @Override
-    public void update(DtoAdmin dtoAdmin) {
-        if(adminRepository.existsById(dtoAdmin.getAdminID()))
-            throw new RuntimeException();
-        else {
-            adminRepository.save(modelMapper.map(dtoAdmin,Admin.class));
+        if(adminRepository.existsByUserName(dtoAdmin.getUserName())){
+            throw new CustomException("user already exists");
         }
+        adminRepository.save(modelMapper.map(dtoAdmin, Admin.class));
+        return dtoAdmin;
     }
 
     @Override
-    public List<DtoAdmin> getAll() {
+    public DtoAdmin update(DtoAdmin dtoAdmin) {
+        if(adminRepository.existsByUserName(dtoAdmin.getUserName())){
+            throw new CustomException("user already exists");
+        }
+            adminRepository.save(modelMapper.map(dtoAdmin, Admin.class));
+            return dtoAdmin;
+    }
+
+    @Override
+    public List<DtoAdmin> getAll() throws Exception {
         List<DtoAdmin> dtoAdmins=new ArrayList<>();
         adminRepository.findAll().forEach(admin -> {
-            dtoAdmins.add(modelMapper.map(admin,DtoAdmin.class));
+            dtoAdmins.add(modelMapper.map(admin, DtoAdmin.class));
         });
         return dtoAdmins;
     }
@@ -75,4 +79,6 @@ public class AdminServiceImpl implements AdminService{
     public boolean ifExit(String id) {
         return adminRepository.existsById(id);
     }
+
+
 }

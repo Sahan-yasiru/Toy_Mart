@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,17 +23,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void save(DtoOrder dto) {
+    public DtoOrder save(DtoOrder dto) {
         orderRepository.save(modelMapper.map(dto, Order.class));
+        return dto;
     }
 
     @Override
-    public void update(DtoOrder dto) {
+    public DtoOrder update(DtoOrder dto) {
         orderRepository.save(modelMapper.map(dto, Order.class));
+        return  dto;
     }
 
     @Override
-    public List<DtoOrder> getAll() {
+    public List<DtoOrder> getAll() throws Exception {
         // Fetch all orders from DB
         List<Order> orders = orderRepository.findAll();
 
@@ -43,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
             DtoOrder dto = new DtoOrder();
 
             // Map basic order info
-            dto.setOrderID(order.getOrderID());
+            dto.setOrderID(order.getOrderId());
 
             // Map customer using ModelMapper
             dto.setCustomer(modelMapper.map(order.getCustomer(), DtoCustomer.class));

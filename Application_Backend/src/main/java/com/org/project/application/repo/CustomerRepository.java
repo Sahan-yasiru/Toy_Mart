@@ -9,7 +9,10 @@ import java.util.List;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, String> {
-    @Query("SELECT c.customer_ID FROM customer c ORDER BY c.customer_ID DESC")
+    @Query("SELECT c.customerId FROM Customer c ORDER BY c.customerId DESC")
     List<String> getLastID();
+
+    boolean existsByEmail(String email);
+
 
 }

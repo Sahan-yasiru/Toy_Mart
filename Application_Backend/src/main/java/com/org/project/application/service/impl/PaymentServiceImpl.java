@@ -20,17 +20,19 @@ public class PaymentServiceImpl implements PaymentService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void save(DtoPayment dto) {
+    public DtoPayment save(DtoPayment dto) {
         paymentRepository.save(modelMapper.map(dto, Payment.class));
+        return dto;
     }
 
     @Override
-    public void update(DtoPayment dto) {
+    public DtoPayment update(DtoPayment dto) {
         paymentRepository.save(modelMapper.map(dto, Payment.class));
+        return  dto;
     }
 
     @Override
-    public List<DtoPayment> getAll() {
+    public List<DtoPayment> getAll() throws Exception {
         return paymentRepository.findAll().stream().map(payment -> modelMapper.map(payment, DtoPayment.class)).toList();
     }
 

@@ -10,8 +10,10 @@ import java.util.List;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, String> {
 
-    @Query("SELECT a.adminID FROM admin a ORDER BY a.adminID DESC")
+    @Query("SELECT a.adminId FROM Admin a ORDER BY a.adminId DESC")
     List<String> getLastID();
+
+    boolean existsByUserName(String userName);
 
 
 }

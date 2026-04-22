@@ -8,20 +8,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity(name = "customer_order")
+@Entity(name = "orders")
 public class Order {
-    @Id
-    private String orderID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cus_ID")
+    @Id
+    private String orderId;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "order_product",
-            joinColumns = @JoinColumn(name = "order_ID"),
-            inverseJoinColumns = @JoinColumn(name = "product_ID")
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
 }

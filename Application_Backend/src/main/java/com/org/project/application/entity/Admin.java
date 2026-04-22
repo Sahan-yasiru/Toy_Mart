@@ -8,15 +8,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "admin")
+@Entity
 public class Admin {
+
     @Id
-    private String adminID;
-    @Column(name = "username",nullable = false)
+    private String adminId;
+
+    @Column(nullable = false, unique = true)
     private String userName;
-    @Column(name = "password",nullable = false)
+
     private String password;
-
-
 
 }
