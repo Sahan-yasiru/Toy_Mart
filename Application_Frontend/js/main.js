@@ -21,9 +21,23 @@ const App = {
             'admin': 'Admin Management',
             'customer': 'Customer Management',
             'category': 'Category Management',
-            'product': 'Product Management'
+            'product': 'Product Management',
+            'order': 'Order Management',
+            'payment': 'Payment Management'
         };
         document.getElementById('page-title').innerText = titles[viewId];
+
+        // Search container visibility
+        const searchContainer = document.getElementById('search-container');
+        if (searchContainer) {
+            if (viewId === 'dashboard') {
+                searchContainer.classList.add('hidden');
+            } else {
+                searchContainer.classList.remove('hidden');
+                const searchInput = document.getElementById('global-search');
+                if (searchInput) searchInput.value = ''; // Reset search on navigate
+            }
+        }
 
         const contentContainer = document.getElementById('app-content');
 
@@ -41,6 +55,8 @@ const App = {
                 if (viewId === 'customer' && typeof CustomerModule !== 'undefined') CustomerModule.fetchCustomers();
                 if (viewId === 'category' && typeof CategoryModule !== 'undefined') CategoryModule.fetchCategories();
                 if (viewId === 'product' && typeof ProductModule !== 'undefined') ProductModule.init();
+                if (viewId === 'order' && typeof OrderModule !== 'undefined') OrderModule.init();
+                if (viewId === 'payment' && typeof PaymentModule !== 'undefined') PaymentModule.init();
 
                 if (viewId === 'dashboard') {
                     const fetchStat = (url, elementId) => {
@@ -102,7 +118,21 @@ const App = {
             CategoryModule.setupModal(mode, data);
         } else if (modalId === 'productModal' && typeof ProductModule !== 'undefined') {
             ProductModule.setupModal(mode, data);
+        } else if (modalId === 'orderModal' && typeof OrderModule !== 'undefined') {
+            OrderModule.setupModal(mode, data);
+        } else if (modalId === 'paymentModal' && typeof PaymentModule !== 'undefined') {
+            PaymentModule.setupModal(mode, data);
         }
+    },
+
+    handleSearch: function (query) {
+        const view = this.state.currentView;
+        if (view === 'admin' && typeof AdminModule !== 'undefined') AdminModule.handleSearch(query);
+        if (view === 'customer' && typeof CustomerModule !== 'undefined') CustomerModule.handleSearch(query);
+        if (view === 'category' && typeof CategoryModule !== 'undefined') CategoryModule.handleSearch(query);
+        if (view === 'product' && typeof ProductModule !== 'undefined') ProductModule.handleSearch(query);
+        if (view === 'order' && typeof OrderModule !== 'undefined') OrderModule.handleSearch(query);
+        if (view === 'payment' && typeof PaymentModule !== 'undefined') PaymentModule.handleSearch(query);
     },
 
     closeModal: function (modalId) {
@@ -149,8 +179,68 @@ const App = {
     },
 
     init: function () {
-        // Load the initial dashboard view
-        this.navigate('dashboard');
+        this.checkSession();
+    },
+
+    checkSession: function () {
+        const user = localStorage.getItem('currentUser');
+        if (user) {
+            const userData = JSON.parse(user);
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-sidebar').classList.remove('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            this.updateProfile(userData.userName);
+            this.navigate('dashboard');
+        } else {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-sidebar').classList.add('hidden');
+            document.getElementById('main-content').classList.add('hidden');
+        }
+    },
+
+    updateProfile: function (userName) {
+        const nameEl = document.getElementById('user-display-name');
+        const initialEl = document.getElementById('user-initials');
+        if (nameEl) nameEl.innerText = userName;
+        if (initialEl) initialEl.innerText = userName.charAt(0).toUpperCase();
+    }
+};
+
+const AuthModule = {
+    handleLogin: function (event) {
+        event.preventDefault();
+        const user = document.getElementById('login-username').value;
+        const pass = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+
+        errorEl.classList.add('hidden');
+
+        // Fetch admins to verify
+        fetch(`${API_BASE}/admin`)
+            .then(res => res.json())
+            .then(data => {
+                const admin = data.data.find(a => a.userName === user && a.password === pass);
+                if (admin) {
+                    localStorage.setItem('currentUser', JSON.stringify(admin));
+                    App.showToast('Login successful!');
+                    App.checkSession();
+                } else {
+                    errorEl.classList.remove('hidden');
+                    App.showToast('Invalid username or password', 'error');
+                }
+            })
+            .catch(err => {
+                console.error('Login error:', err);
+                App.showToast('Server error during login', 'error');
+            });
+    },
+
+    logout: function () {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('currentUser');
+            App.checkSession();
+            App.showToast('Logged out successfully');
+        }
     }
 };
 

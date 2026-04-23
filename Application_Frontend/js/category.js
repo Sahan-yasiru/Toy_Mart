@@ -25,17 +25,17 @@ const CategoryModule = {
             });
     },
 
-    renderTable: function() {
+    renderTable: function(data = this.categories) {
         const tbody = document.getElementById('category-table-body');
         if (!tbody) return;
         
-        if (this.categories.length === 0) {
+        if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/50">No categories found.</td></tr>';
             return;
         }
         
         let html = '';
-        this.categories.forEach(cat => {
+        data.forEach(cat => {
             html += `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-800">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">${cat.id}</td>
@@ -52,6 +52,14 @@ const CategoryModule = {
             `;
         });
         tbody.innerHTML = html;
+    },
+
+    handleSearch: function(query) {
+        const filtered = this.categories.filter(c => 
+            c.id.toString().includes(query) || 
+            c.name.toLowerCase().includes(query.toLowerCase())
+        );
+        this.renderTable(filtered);
     },
 
     setupModal: function(mode, data) {

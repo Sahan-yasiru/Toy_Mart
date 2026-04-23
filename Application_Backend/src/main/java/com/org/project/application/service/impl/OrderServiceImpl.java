@@ -4,14 +4,19 @@ import com.org.project.application.dto.DtoCustomer;
 import com.org.project.application.dto.DtoOrder;
 import com.org.project.application.dto.DtoProduct;
 import com.org.project.application.entity.Order;
+import com.org.project.application.entity.Product;
+import com.org.project.application.exception.CustomException;
 import com.org.project.application.repo.OrderRepository;
+import com.org.project.application.repo.ProductRepository;
 import com.org.project.application.service.custom.OrderService;
+import com.org.project.application.service.custom.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -20,10 +25,25 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
+    private final ProductService productService;
 
     @Override
     @Transactional
-    public DtoOrder save(DtoOrder dto) {
+    public DtoOrder save(DtoOrder dto) throws Exception {
+        List<DtoProduct> products=dto.getProducts();
+        for (DtoProduct product : products) {
+            DtoProduct dtoProduct=productService.find(product.getId());
+            if(dtoProduct==null){
+                throw new CustomException("product not found");
+            }else {
+                if(dtoProduct.getQty()==0){
+                    throw new CustomException(dtoProduct.getName()+" qty is 0");
+                }
+                dtoProduct.setQty(dtoProduct.getQty()-1);
+                productService.update(dtoProduct);
+            }
+
+        }
         orderRepository.save(modelMapper.map(dto, Order.class));
         return dto;
     }
@@ -31,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public DtoOrder update(DtoOrder dto) {
         orderRepository.save(modelMapper.map(dto, Order.class));
-        return  dto;
+        return dto;
     }
 
     @Override
@@ -63,8 +83,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String getLastID() {
-        int id= Integer.parseInt(orderRepository.getLastID().get(0).substring(1));
-        return String.format("O%03d",++id);
+        int id = Integer.parseInt(orderRepository.getLastID().get(0).substring(1));
+        return String.format("O%03d", ++id);
     }
 
     @Override
@@ -74,8 +94,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public DtoOrder find(String id) {
-        return modelMapper.map(orderRepository.findById(id),DtoOrder.class);
+        return modelMapper.map(orderRepository.findById(id), DtoOrder.class);
     }
+
     @Override
     public boolean ifExit(String id) {
         return orderRepository.existsById(id);

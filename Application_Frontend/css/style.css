@@ -130,10 +130,16 @@ input, select {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
 }
 
+/* UI Scale Up and contrast fix */
+html {
+    font-size: 17px;
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+}
 .dark .glass-card {
-    background: rgba(30, 41, 59, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    background: rgba(30, 41, 59, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* New Animations */
@@ -167,4 +173,41 @@ input, select {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+/* real time change background */
+@keyframes mesh {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.bg-mesh {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.4) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.4) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.4) 0px, transparent 50%);
+  background-size: 150% 150%;
+  animation: mesh 15s ease infinite;
+}
+
+.dark .bg-mesh {
+  background-color: #0f172a;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.6) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.6) 0px, transparent 50%);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+.animate-shake {
+  animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
 }

@@ -24,17 +24,17 @@ const AdminModule = {
             });
     },
 
-    renderTable: function() {
+    renderTable: function(data = this.admins) {
         const tbody = document.getElementById('admin-table-body');
         if (!tbody) return;
         
-        if (this.admins.length === 0) {
+        if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/50">No administrators found.</td></tr>';
             return;
         }
         
         let html = '';
-        this.admins.forEach(admin => {
+        data.forEach(admin => {
             html += `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-800">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">${admin.adminID}</td>
@@ -51,6 +51,14 @@ const AdminModule = {
             `;
         });
         tbody.innerHTML = html;
+    },
+
+    handleSearch: function(query) {
+        const filtered = this.admins.filter(a => 
+            a.adminID.toLowerCase().includes(query.toLowerCase()) || 
+            a.userName.toLowerCase().includes(query.toLowerCase())
+        );
+        this.renderTable(filtered);
     },
 
     setupModal: function(mode, data) {

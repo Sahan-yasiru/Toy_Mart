@@ -31,7 +31,7 @@ public class OrderController {
         return new ResponseEntity<>(new APIResponse<>(200,"order updated successfully",orderService.update(dtoOrder)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public  ResponseEntity<APIResponse<String>> deleteOrder(@PathVariable String id) throws Exception {
         orderService.delete(id);
         return ResponseEntity.ok(new APIResponse<>(200,"order successfully deleted",null));

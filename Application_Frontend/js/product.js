@@ -56,17 +56,17 @@ const ProductModule = {
         select.innerHTML = html;
     },
 
-    renderTable: function() {
+    renderTable: function(data = this.products) {
         const tbody = document.getElementById('product-table-body');
         if (!tbody) return;
         
-        if (this.products.length === 0) {
+        if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/50">No products found.</td></tr>';
             return;
         }
         
         let html = '';
-        this.products.forEach(prod => {
+        data.forEach(prod => {
             const catName = prod.category ? prod.category.name : '<span class="text-gray-400 italic">None</span>';
             html += `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-800">
@@ -87,6 +87,15 @@ const ProductModule = {
             `;
         });
         tbody.innerHTML = html;
+    },
+
+    handleSearch: function(query) {
+        const filtered = this.products.filter(p => 
+            p.id.toLowerCase().includes(query.toLowerCase()) || 
+            p.name.toLowerCase().includes(query.toLowerCase()) ||
+            (p.category && p.category.name.toLowerCase().includes(query.toLowerCase()))
+        );
+        this.renderTable(filtered);
     },
 
     setupModal: function(mode, data) {

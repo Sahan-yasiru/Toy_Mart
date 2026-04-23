@@ -24,17 +24,17 @@ const CustomerModule = {
             });
     },
 
-    renderTable: function() {
+    renderTable: function(data = this.customers) {
         const tbody = document.getElementById('customer-table-body');
         if (!tbody) return;
         
-        if (this.customers.length === 0) {
+        if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/50">No customers found.</td></tr>';
             return;
         }
         
         let html = '';
-        this.customers.forEach(cust => {
+        data.forEach(cust => {
             const email = cust.email || cust.eMail || '';
             html += `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-800">
@@ -53,6 +53,15 @@ const CustomerModule = {
             `;
         });
         tbody.innerHTML = html;
+    },
+
+    handleSearch: function(query) {
+        const filtered = this.customers.filter(c => 
+            c.customerId.toLowerCase().includes(query.toLowerCase()) || 
+            c.name.toLowerCase().includes(query.toLowerCase()) ||
+            (c.email || c.eMail || '').toLowerCase().includes(query.toLowerCase())
+        );
+        this.renderTable(filtered);
     },
 
     setupModal: function(mode, data) {

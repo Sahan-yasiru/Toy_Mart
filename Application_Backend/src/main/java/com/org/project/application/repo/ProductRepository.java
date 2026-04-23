@@ -1,11 +1,13 @@
 package com.org.project.application.repo;
 
 import com.org.project.application.entity.Product;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
@@ -14,5 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<String> getLastID();
 
     boolean existsByName(String name);
+
+    @NullMarked
+    Optional<Product> findById(String id);
 
 }
