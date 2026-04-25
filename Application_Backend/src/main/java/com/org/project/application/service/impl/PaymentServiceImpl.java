@@ -1,7 +1,10 @@
 package com.org.project.application.service.impl;
 
 import com.org.project.application.dto.DtoPayment;
+import com.org.project.application.entity.Order;
 import com.org.project.application.entity.Payment;
+import com.org.project.application.exception.CustomException;
+import com.org.project.application.repo.OrderRepository;
 import com.org.project.application.repo.PaymentRepository;
 import com.org.project.application.service.custom.PaymentService;
 import jakarta.transaction.Transactional;
@@ -21,6 +24,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public DtoPayment save(DtoPayment dto) {
+        if(paymentRepository.existsByOrder(modelMapper.map(dto.getOrder(), Order.class))){
+            throw new CustomException("order payment is already done");
+        }
         paymentRepository.save(modelMapper.map(dto, Payment.class));
         return dto;
     }
