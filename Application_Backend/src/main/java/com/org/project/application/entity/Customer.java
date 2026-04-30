@@ -21,4 +21,7 @@ public class Customer {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Order> order;
 }
