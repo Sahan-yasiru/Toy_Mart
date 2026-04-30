@@ -9,14 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ApplicationBackendApplicationTests {
     @Autowired
-    private PaymentService categoryService;
+    private PaymentService paymentService;
     @Test
     void contextLoads() {
-        DtoCategory dtoCategory=new DtoCategory();
-        dtoCategory.setId(4);
-        dtoCategory.setName("jbl");
+
         try {
-            System.out.println(categoryService.getAll());
+            paymentService.delete("P001");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
